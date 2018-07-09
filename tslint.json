@@ -1,0 +1,11 @@
+{
+  "extends": ["tslint-config-airbnb"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "no-console": false,
+    "comma-dangle": "off"
+  }
+}

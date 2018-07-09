@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "outDir": "./dist/",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "sourceMap": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true
+  },
+  "include": [
+    "./src/client/**/*"
+  ]
+}
