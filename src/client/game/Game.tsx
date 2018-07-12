@@ -126,7 +126,7 @@ class Game {
   }
 
   _giphyUrl = (): string => (
-    `http://api.giphy.com/v1/gifs/trending`
+    `https://api.giphy.com/v1/gifs/trending`
     + `?api_key=8RyL5yKVPUkiFr9On6gOTfeW60B0PnRs&offset=${this.level * 25}`
   )
 }
