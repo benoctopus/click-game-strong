@@ -15,4 +15,4 @@ app.use(parser.text());
 
 app.use('/', express.static(path.join(__dirname, '../../../dist')));
 
-app.listen()
+app.listen(PORT, () => console.log('listening on', PORT));
