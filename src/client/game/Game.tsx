@@ -18,6 +18,7 @@ class Game {
     this.all = {};
     this.onProgress = onProgress;
     this.gameOver = gameOver;
+    console.log(this._giphyUrl);
   }
 
   startGame = (): void => this._onLevel();
