@@ -3,15 +3,20 @@
     "jsx": "react",
     "outDir": "./dist/",
     "moduleResolution": "node",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "sourceMap": true,
-    "module": "es6",
-    "target": "es5",
-    "allowJs": true
+    // "module": "es6",
+    "target": "es6",
+    "allowJs": true,
   },
+  "types": [
+    "react",
+    "axios",
+    "material-ui"
+  ],
   "include": [
     "./src/client/**/*"
-  ]
+  ],
 }

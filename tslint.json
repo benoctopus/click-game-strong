@@ -6,6 +6,7 @@
   },
   "rules": {
     "no-console": false,
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "variable-name": false
   }
 }

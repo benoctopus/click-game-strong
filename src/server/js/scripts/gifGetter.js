@@ -6,50 +6,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// #script to help get images from giphy
 const axios = require('axios');
-// const jimp = require('jimp');
 const { GifFrame, GifCodec, GifUtil, BitmapImage } = require('gifwrap');
+const Jimp = require('jimp');
 const codec = new GifCodec;
-console.log(GifFrame, GifUtil);
 require('dotenv').config({
     path: '../../../../.env',
 });
 class GifGetter {
     constructor(res) {
-        this.resize = (gifUrl) => __awaiter(this, void 0, void 0, function* () {
-            const res = yield axios.get(gifUrl, { responseType: 'arraybuffer' });
-            return yield this.manipulateFrames(res.data);
-        });
-        this.cropFrame = (dimension, frame) => {
-            const bm = new BitmapImage(frame.bitmap);
-            console.log(bm);
-            bm.reframe(0, 0, dimension, dimension);
-            console.log(bm);
-            return bm;
+        this.getGifs = (category = 'cats') => {
+            return new Promise((resolve) => (axios.get(`${this.base}&q=${category}&limit=20`)
+                .then(res => resolve(res.data.data.forEach((gif) => {
+                this._resize(gif.images.original.url)
+                    .then(newGif => console.log(newGif));
+            }))).catch((err) => { throw err; })));
         };
-        this.manipulateFrames = (buffer) => __awaiter(this, void 0, void 0, function* () {
-            let oldGif;
+        // private methods
+        this._resize = (gifUrl) => __awaiter(this, void 0, void 0, function* () {
+            const res = yield axios.get(gifUrl, { responseType: 'arraybuffer' });
+            return yield this._manipulateFrames(res.data);
+        });
+        this._cropFrame = (dimension, frame) => {
+            const jInstance = new Jimp(1, 1, 0);
+            jInstance.bitmap = frame.bitmap;
+            jInstance.cover(dimension, dimension, Jimp.HORIZONTAL_ALIGN_CENTER, Jimp.VERTICAL_ALIGN_TOP);
+            return new GifFrame(jInstance.bitmap);
+            // return new GifFrame()
+            // console.log(frame.bitmap);
+        };
+        this._manipulateFrames = (buffer) => __awaiter(this, void 0, void 0, function* () {
+            // read array buffer into gif obj, loop through frames and apply _cropFrame
+            let gif;
             try {
-                oldGif = yield codec.decodeGif(buffer);
+                gif = yield codec.decodeGif(buffer);
             }
             catch (err) {
                 console.log(err);
             }
-            // const newGif =
-            oldGif.frames.map((frame) => {
+            const frames = gif.frames.map((frame) => {
                 const { width, height } = frame.bitmap;
-                return this.cropFrame((width <= height ? width : height), frame);
+                return this._cropFrame((width <= height ? width : height), frame);
             });
+            codec.encodeGif(frames)
+                .then(() => console.log('hi'));
         });
-        this.getGifs = (category = 'cats') => {
-            // closure(?) so that the gc doesn't destroy the url var every sweep
-            return new Promise((resolve) => (axios.get(`${this.base}&q=${category}&limit=20`)
-                .then(res => resolve(res.data.data.map((gif) => {
-                this.resize(gif.images.original.url)
-                    .then(() => console.log());
-            }))).catch((err) => { throw err; })));
-        };
         this.res = res;
         const key = process.env.GIPHY_KEY;
         this.base = `http://api.giphy.com/v1/gifs/search?api_key=${key}`;
