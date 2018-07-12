@@ -15,7 +15,6 @@ class Game {
     this.round = 1;
     this.level = 0;
     this.unpicked = {};
-    this.picked = {};
     this.all = {};
     this.onProgress = onProgress;
     this.gameOver = gameOver;
@@ -23,24 +22,27 @@ class Game {
 
   startGame = (): void => this._onLevel();
 
-  getSelected = (): object[] => (
-    Object.keys(this.selected).map(id => (
-      { id, url: this.selected[id] }
-    ))
+  getSelected = (): any[] => (
+    Object.keys(this.selected).map((id) => {
+      if (!this.selected[id]) {
+        throw new Error('umm no');
+      }
+      return { id, url: this.selected[id] };
+    })
   )
 
-  onClick = (event): void => {
-    const { id } = event.target;
-    if (id in this.picked) {
+  onClick = (id): void => {
+    if (!(id in this.unpicked)) {
       this._gameOver();
     } else {
-      this.picked[id] = this.all[id];
       delete this.unpicked[id];
-      (this.round < 20 ? this._onRound : this._onLevel)();
+      (this.round < 15 ? this._onRound : this._onLevel)();
     }
   }
 
-  _gameOver = () => {
+  outOfTime = ():void => this._gameOver();
+
+  _gameOver = (): void => {
     this.level = 0;
     this.unpicked = {};
     this.gameOver();
@@ -55,7 +57,7 @@ class Game {
 
   _onRound = (): void => {
     this.round += 1;
-    this._selectGifs;
+    this._selectGifs();
     this.onProgress({
       selected: this.selected,
       round: this.round,
@@ -66,14 +68,17 @@ class Game {
   _selectGifs = (): void => {
     const selected: object = {};
     let i: number = 0;
+    let j: number = 0;
     let fulfilled: boolean = false;
     const tempAllKeys = Object.keys(this.all);
     const unpickedKeys = Object.keys(this.unpicked);
     while (i < 4) {
-      console.log('picking:', i);
       if (i < 3 || fulfilled) {
         const randInt: number = this._randomIndex(tempAllKeys.length);
         const randKey: string = tempAllKeys.splice(randInt, 1).join('');
+        if (!this.all[randKey]) {
+          continue;
+        }
         selected[randKey] = this.all[randKey];
         if (randKey in this.unpicked && !fulfilled) {
           fulfilled = true;
@@ -83,10 +88,12 @@ class Game {
         const randInt: number = this._randomIndex(unpickedKeys.length);
         const randKey: string = unpickedKeys.splice(randInt, 1).join('');
         if (!(randKey in selected)) {
-          selected[randKey] = this.all[randKey];
+          selected[randKey] = this.unpicked[randKey];
           i += 1;
         }
       }
+      if (j > 100) throw new Error('failed to select gifs');
+      j += 1;
     }
     this.selected = selected;
   }
@@ -97,8 +104,11 @@ class Game {
 
   _createGifs = (giphyResponse: any): void => {
     giphyResponse.forEach((gif: any) => {
+      if (!gif.images.fixed_height.url) {
+        return;
+      }
       const id = gif.id;
-      const url = gif.images.original.url;
+      const url = gif.images.fixed_height.url;
       this.unpicked[id] = url;
     });
     this.all = { ...this.unpicked };
@@ -116,8 +126,8 @@ class Game {
   }
 
   _giphyUrl = (): string => (
-    `http://api.giphy.com/v1/unpicked/trending`
-    + `?api_key=8RyL5yKVPUkiFr9On6gOTfeW60B0PnRs&offset=${this.level - 1}`
+    `http://api.giphy.com/v1/gifs/trending`
+    + `?api_key=8RyL5yKVPUkiFr9On6gOTfeW60B0PnRs&offset=${this.level * 25}`
   )
 }
 export default Game;

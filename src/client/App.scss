@@ -1,0 +1,86 @@
+@import 'reset';
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+* {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.g-card {
+  height: 200px;
+  width: 200px;
+  animation: 500ms fade-in ;
+}
+
+.g-card:hover {
+  cursor: pointer;
+}
+
+.card-media {
+  height: 0 !important;
+  padding-top: 200px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#game-section {
+  width: 80%;
+  margin: 10% auto;
+}
+
+#score-board {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+}
+
+#card-container {
+margin-top: 65px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
+}
+
+#header-container {
+  display: flex;
+  flex-flow: 'row nowrap';
+  justify-content: center;
+  padding: 3%;
+  animation: fade-in 400ms;
+}
+
+#page-header {
+  text-align: center;
+  width: fit-content;
+  font-size: 50px;
+  font-weight: bold;
+}
+
+#instruction-card {
+  animation: fade-in 400ms;
+  width: 60%;
+  margin: 10% auto;
+}
+#instruction-card-content {
+  padding: 30px;
+}
+
+#instruction-card-text {
+  font-size: 25px;
+}
+
+#game-over {
+  display: flex;
+  flex-flow: column nowrap;
+  margin-top: 10%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+#game-over-message {
+  font-size: 40px;
+  padding: 30px;
+}
+
+@keyframes fade-in {
+  from {opacity: 0.1};
+  to {opacity: 1};
+}

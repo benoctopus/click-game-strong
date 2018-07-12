@@ -7,9 +7,9 @@ interface GifCard {
   id: string;
 }
 
-const GifCard = (props: GifCard) => (
-  <Card id={props.id}>
-    <CardMedia image={props.url}/>
+const GifCard = (props: any) => (
+  <Card id={props.id} className="g-card">
+    <CardMedia className="card-media" image={props.url}/>
   </Card>
 );
 
