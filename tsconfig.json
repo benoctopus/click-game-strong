@@ -2,20 +2,20 @@
   "compilerOptions": {
     "jsx": "react",
     "outDir": "./dist/",
+    "importHelpers": true,
     "moduleResolution": "node",
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "sourceMap": true,
     // "module": "es6",
     "target": "es6",
     "allowJs": true,
+    "baseUrl": "./",
+    "paths": {
+      "tslib": ["node_modules/tslib/tslib.d.ts"]
+    }
   },
-  "types": [
-    "react",
-    "axios",
-    "material-ui"
-  ],
   "include": [
     "./src/client/**/*"
   ],
